@@ -59,40 +59,40 @@ export default function RbLayout({ children }: { children: ReactNode }) {
       : "In Progress";
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-50">
+    <div className="min-h-screen flex flex-col bg-[#f7f6f3] text-[#2b2118]">
       {/* Top bar */}
-      <header className="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
-        <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between text-sm">
-          <div className="font-semibold tracking-tight">
+      <header className="border-b border-[#2b2118] bg-[#f7f6f3]/95 backdrop-blur">
+        <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between text-sm">
+          <div className="font-semibold tracking-tight font-serif">
             AI Resume Builder
           </div>
-          <div className="text-slate-300 text-xs sm:text-sm">
+          <div className="text-xs sm:text-sm text-[#6e6256]">
             Project 3 —{" "}
             {currentStep
               ? `Step ${currentStep} of 8`
               : "Build Track"}
           </div>
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
-              Status: Active
+            <span className="inline-flex items-center rounded-full border border-[#8b0000] bg-[#8b0000]/10 px-3 py-1 text-xs font-medium text-[#8b0000]">
+              Active Track
             </span>
           </div>
         </div>
       </header>
 
       {/* Context header */}
-      <section className="border-b border-slate-800 bg-slate-950">
+      <section className="border-b border-[#2b2118] bg-[#f7f6f3]">
         <div className="mx-auto max-w-6xl px-4 py-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-lg font-semibold tracking-tight">
+            <h1 className="text-lg font-semibold tracking-tight font-serif">
               Build Track — Route Rail
             </h1>
-            <p className="text-xs text-slate-400 max-w-xl">
+            <p className="text-xs text-[#6e6256] max-w-xl">
               Move through each step in order. You can&apos;t skip ahead until you
               upload the artifact for the current step.
             </p>
           </div>
-          <div className="flex items-center gap-2 text-xs text-slate-400">
+          <div className="flex items-center gap-2 text-xs text-[#6e6256]">
             <span className="hidden sm:inline">{statusText}</span>
           </div>
         </div>
@@ -102,7 +102,7 @@ export default function RbLayout({ children }: { children: ReactNode }) {
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-4 py-6 flex flex-col gap-6 lg:flex-row">
           {/* Route rail */}
-          <nav className="w-full lg:w-48 border border-slate-800/80 rounded-xl bg-slate-900/60 p-3 flex flex-row lg:flex-col gap-2 text-xs">
+          <nav className="w-full lg:w-48 border border-[#2b2118] rounded-xl bg-[#f7f6f3] p-3 flex flex-row lg:flex-col gap-2 text-xs">
             {steps.map((step, index) => {
               const stepNumber = index + 1;
               const isCurrent =
@@ -115,21 +115,21 @@ export default function RbLayout({ children }: { children: ReactNode }) {
               const baseClasses =
                 "flex-1 lg:flex-none flex items-center justify-between rounded-lg border px-3 py-2 transition text-xs";
               const interactiveClasses = unlocked
-                ? "border-slate-700 bg-slate-900/70 hover:border-sky-400 hover:bg-slate-900"
-                : "border-slate-800 bg-slate-900/40 opacity-50 cursor-not-allowed";
+                ? "border-[#2b2118] bg-[#f7f6f3] hover:bg-[#8b0000]/5"
+                : "border-[#2b2118]/40 bg-[#f7f6f3] opacity-60 cursor-not-allowed";
               const activeClasses = isCurrent
-                ? "border-sky-400 bg-sky-500/10"
+                ? "border-[#8b0000] bg-[#8b0000]/5"
                 : "";
 
               const content = (
                 <span className="flex w-full items-center justify-between gap-2">
                   <span className="flex items-center gap-2">
-                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-slate-800 text-[10px] font-semibold">
+                    <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-[#2b2118] text-[10px] font-semibold">
                       {String(stepNumber).padStart(2, "0")}
                     </span>
                     <span className="hidden sm:inline">{step.label}</span>
                   </span>
-                  <span className="text-[10px] uppercase tracking-wide text-slate-400">
+                  <span className="text-[10px] uppercase tracking-wide text-[#6e6256]">
                     {completed[index] ? "Done" : unlocked ? "Open" : "Locked"}
                   </span>
                 </span>
@@ -159,15 +159,15 @@ export default function RbLayout({ children }: { children: ReactNode }) {
             })}
             <Link
               href="/rb/proof"
-              className="flex-1 lg:flex-none mt-0 lg:mt-2 flex items-center justify-between rounded-lg border border-violet-500/60 bg-violet-500/10 px-3 py-2 text-xs hover:border-violet-400 hover:bg-violet-500/20 transition"
+              className="flex-1 lg:flex-none mt-0 lg:mt-2 flex items-center justify-between rounded-lg border border-[#8b0000] bg-[#8b0000]/5 px-3 py-2 text-xs hover:bg-[#8b0000]/10 transition"
             >
               <span className="flex items-center gap-2">
-                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-violet-600 text-[10px] font-semibold">
-                  ✅
+                <span className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-[#8b0000] text-[10px] font-semibold">
+                  ✓
                 </span>
                 <span className="hidden sm:inline">Proof & Submission</span>
               </span>
-              <span className="text-[10px] uppercase tracking-wide text-violet-200">
+              <span className="text-[10px] uppercase tracking-wide text-[#8b0000]">
                 Final
               </span>
             </Link>
@@ -176,39 +176,39 @@ export default function RbLayout({ children }: { children: ReactNode }) {
           {/* Main and build panels */}
           <div className="flex-1 flex flex-col lg:flex-row gap-4">
             {/* Main workspace (70%) */}
-            <section className="lg:w-[70%] min-h-[360px] border border-slate-800 rounded-xl bg-slate-900/60 p-4">
+            <section className="lg:w-[70%] min-h-[360px] border border-[#2b2118] rounded-xl bg-[#f7f6f3] p-4">
               {children}
             </section>
 
             {/* Secondary build panel (30%) */}
-            <aside className="lg:w-[30%] min-h-[260px] border border-slate-800 rounded-xl bg-slate-900/80 p-4 flex flex-col gap-4">
-              <h2 className="text-sm font-semibold tracking-tight">
+            <aside className="lg:w-[30%] min-h-[260px] border border-[#2b2118] rounded-xl bg-[#f7f6f3] p-4 flex flex-col gap-4">
+              <h2 className="text-sm font-semibold tracking-tight font-serif">
                 Build Panel
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[#6e6256]">
                 Use this panel to move instructions into Lovable and track the
                 artifact for this step.
               </p>
               <textarea
-                className="min-h-[140px] w-full rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-2 text-xs text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/60 resize-none"
+                className="min-h-[140px] w-full rounded-lg border border-[#2b2118] bg-[#f7f6f3] px-3 py-2 text-xs text-[#2b2118] outline-none focus:border-[#8b0000] focus:ring-1 focus:ring-[#8b0000]/40 resize-none"
                 placeholder="Copy This Into Lovable..."
               />
               <div className="flex flex-wrap gap-2 text-xs">
-                <button className="flex-1 rounded-lg bg-slate-800 px-3 py-2 font-medium hover:bg-slate-700 transition">
+                <button className="flex-1 rounded-lg border border-[#2b2118] bg-transparent px-3 py-2 font-medium hover:bg-[#8b0000]/5 transition">
                   Copy
                 </button>
-                <button className="flex-1 rounded-lg bg-sky-600 px-3 py-2 font-medium hover:bg-sky-500 transition">
+                <button className="flex-1 rounded-lg bg-[#8b0000] px-3 py-2 font-medium text-[#f7f6f3] hover:bg-[#8b0000]/90 transition">
                   Build in Lovable
                 </button>
               </div>
               <div className="flex flex-wrap gap-2 text-[11px]">
-                <button className="flex-1 rounded-lg border border-emerald-500/60 bg-emerald-500/10 px-2 py-1 font-medium text-emerald-200 hover:bg-emerald-500/20 transition">
+                <button className="flex-1 rounded-lg border border-[#2b2118] bg-transparent px-2 py-1 font-medium hover:bg-[#8b0000]/5 transition">
                   It Worked
                 </button>
-                <button className="flex-1 rounded-lg border border-rose-500/60 bg-rose-500/10 px-2 py-1 font-medium text-rose-200 hover:bg-rose-500/20 transition">
+                <button className="flex-1 rounded-lg border border-[#2b2118] bg-transparent px-2 py-1 font-medium hover:bg-[#8b0000]/5 transition">
                   Error
                 </button>
-                <button className="w-full rounded-lg border border-slate-600 bg-slate-900 px-2 py-1 font-medium hover:bg-slate-800 transition">
+                <button className="w-full rounded-lg border border-[#2b2118] bg-transparent px-2 py-1 font-medium hover:bg-[#8b0000]/5 transition">
                   Add Screenshot
                 </button>
               </div>
@@ -218,8 +218,8 @@ export default function RbLayout({ children }: { children: ReactNode }) {
       </main>
 
       {/* Proof footer */}
-      <footer className="border-t border-slate-800 bg-slate-950/90">
-        <div className="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-[11px] text-slate-400">
+      <footer className="border-t border-[#2b2118] bg-[#f7f6f3]">
+        <div className="mx-auto max-w-6xl px-4 py-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-[11px] text-[#6e6256]">
           <span>
             Proof rail is tracked locally in your browser. Complete all 8 steps
             before submitting.
@@ -228,7 +228,7 @@ export default function RbLayout({ children }: { children: ReactNode }) {
             Final summary lives on{" "}
             <Link
               href="/rb/proof"
-              className="text-sky-400 hover:text-sky-300 underline underline-offset-2"
+              className="text-[#8b0000] hover:underline underline-offset-2"
             >
               the Proof page
             </Link>

@@ -133,7 +133,7 @@ export function StepPage({ stepId, children }: StepPageProps) {
 
   if (!hydrated) {
     return (
-      <div className="flex h-full items-center justify-center text-xs text-slate-400">
+      <div className="flex h-full items-center justify-center text-xs text-[#6e6256]">
         Loading step…
       </div>
     );
@@ -142,16 +142,16 @@ export function StepPage({ stepId, children }: StepPageProps) {
   return (
     <div className="flex h-full flex-col gap-4">
       <header className="space-y-1">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-300">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8b0000]">
           {stepLabels[stepId]}
         </p>
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-[#6e6256]">
           Stay focused on this step. Once you&apos;ve uploaded the artifact, you can move
           forward. Skipping ahead is disabled.
         </p>
       </header>
 
-      <section className="flex-1 rounded-lg border border-slate-800 bg-slate-950/40 p-4 text-xs text-slate-200">
+      <section className="flex-1 rounded-lg border border-[#2b2118] bg-[#f7f6f3] p-4 text-xs text-[#2b2118]">
         {children ?? (
           <p>
             This step describes what you need to build for the AI Resume Builder. The
@@ -161,41 +161,41 @@ export function StepPage({ stepId, children }: StepPageProps) {
         )}
       </section>
 
-      <section className="space-y-3 rounded-lg border border-slate-800 bg-slate-950/40 p-4">
+      <section className="space-y-3 rounded-lg border border-[#2b2118] bg-[#f7f6f3] p-4">
         <div className="flex items-center justify-between gap-2 text-xs">
-          <span className="font-medium text-slate-200">
+          <span className="font-medium text-[#2b2118]">
             Step artifact
           </span>
-          <span className="text-[11px] text-slate-400">
+          <span className="text-[11px] text-[#6e6256]">
             Stored as{" "}
-            <code className="rounded bg-slate-900 px-1 py-0.5">
+            <code className="rounded bg-[#f7f6f3] border border-[#2b2118] px-1 py-0.5">
               rb_step_{stepIndex}_artifact
             </code>
           </span>
         </div>
         <label className="flex flex-col gap-2 text-xs">
-          <span className="text-slate-300">
+          <span className="text-[#6e6256]">
             Upload any file or screenshot that proves this step is done.
           </span>
           <input
             type="file"
             onChange={handleFileChange}
-            className="block w-full text-xs text-slate-200 file:mr-3 file:rounded-md file:border-0 file:bg-slate-800 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-slate-100 hover:file:bg-slate-700"
+            className="block w-full text-xs text-[#2b2118] file:mr-3 file:rounded-md file:border file:border-[#2b2118] file:bg-[#f7f6f3] file:px-3 file:py-2 file:text-xs file:font-medium file:text-[#2b2118] hover:file:bg-[#8b0000]/5"
           />
         </label>
         {uploadError && (
-          <p className="text-[11px] text-rose-400">
+          <p className="text-[11px] text-[#8b0000]">
             {uploadError}
           </p>
         )}
         {artifact && (
-          <div className="rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-[11px] text-emerald-100">
+          <div className="rounded-md border border-[#2b2118] bg-[#f7f6f3] px-3 py-2 text-[11px] text-[#2b2118]">
             <p className="font-medium">
               Artifact saved for this step.
             </p>
             {artifact.fileName && (
               <p className="mt-1">
-                <span className="text-emerald-200/80">File:</span>{" "}
+                <span className="text-[#6e6256]">File:</span>{" "}
                 {artifact.fileName}
               </p>
             )}
@@ -204,7 +204,7 @@ export function StepPage({ stepId, children }: StepPageProps) {
       </section>
 
       <div className="mt-auto flex items-center justify-between gap-3 pt-2 text-xs">
-        <div className="text-[11px] text-slate-500">
+        <div className="text-[11px] text-[#6e6256]">
           Next is{" "}
           {stepIndex < stepOrder.length
             ? stepLabels[stepOrder[stepIndex]]
@@ -217,8 +217,8 @@ export function StepPage({ stepId, children }: StepPageProps) {
           disabled={!canGoNext}
           className={`inline-flex items-center justify-center rounded-lg px-3 py-2 text-xs font-medium transition ${
             canGoNext
-              ? "bg-sky-600 text-white hover:bg-sky-500"
-              : "bg-slate-800 text-slate-500 cursor-not-allowed"
+              ? "bg-[#8b0000] text-[#f7f6f3] hover:bg-[#8b0000]/90"
+              : "bg-transparent text-[#6e6256] border border-[#2b2118]/40 cursor-not-allowed"
           }`}
         >
           {stepIndex < stepOrder.length ? "Next Step" : "All Steps Complete"}
