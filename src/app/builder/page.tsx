@@ -3,7 +3,6 @@
 import { useResume } from "@/context/ResumeContext";
 import { ResumeLivePreview } from "@/components/ResumeLivePreview";
 import { ATSScoreWithImprovements } from "@/components/ATSScore";
-import { TemplateSelector } from "@/components/TemplateSelector";
 import { BulletGuidance } from "@/components/BulletGuidance";
 import { SkillsAccordion } from "@/components/SkillsAccordion";
 import { ProjectsAccordion } from "@/components/ProjectsAccordion";
@@ -32,8 +31,6 @@ export default function BuilderPage() {
           Load Sample Data
         </button>
       </div>
-
-      <TemplateSelector />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left: Form */}
