@@ -5,6 +5,8 @@ import { ResumeLivePreview } from "@/components/ResumeLivePreview";
 import { ATSScoreWithImprovements } from "@/components/ATSScore";
 import { TemplateSelector } from "@/components/TemplateSelector";
 import { BulletGuidance } from "@/components/BulletGuidance";
+import { SkillsAccordion } from "@/components/SkillsAccordion";
+import { ProjectsAccordion } from "@/components/ProjectsAccordion";
 
 const inputClass =
   "w-full rounded-lg border border-[#2b2118] bg-[#f7f6f3] px-3 py-2 text-sm text-[#2b2118] outline-none focus:border-[#8b0000] focus:ring-1 focus:ring-[#8b0000]/30";
@@ -259,90 +261,10 @@ export default function BuilderPage() {
           </section>
 
           {/* Projects */}
-          <section className="rounded-xl border border-[#2b2118] bg-[#f7f6f3] p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className={sectionTitleClass + " mb-0"}>Projects</h2>
-              <button
-                type="button"
-                onClick={addProject}
-                className="text-xs font-medium text-[#8b0000] hover:underline"
-              >
-                + Add entry
-              </button>
-            </div>
-            <div className="space-y-4">
-              {data.projects.map((p) => (
-                <div key={p.id} className="rounded-lg border border-[#2b2118]/40 bg-white p-3 space-y-2">
-                  <div className="flex justify-end">
-                    <button
-                      type="button"
-                      onClick={() => removeProject(p.id)}
-                      className="text-xs text-[#6e6256] hover:text-[#8b0000]"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className={labelClass}>Project name</label>
-                      <input
-                        type="text"
-                        className={inputClass}
-                        value={p.name}
-                        onChange={(ev) => setData((d) => ({
-                          ...d,
-                          projects: d.projects.map((x) => x.id === p.id ? { ...x, name: ev.target.value } : x),
-                        }))}
-                        placeholder="Project name"
-                      />
-                    </div>
-                    <div>
-                      <label className={labelClass}>Period</label>
-                      <input
-                        type="text"
-                        className={inputClass}
-                        value={p.period}
-                        onChange={(ev) => setData((d) => ({
-                          ...d,
-                          projects: d.projects.map((x) => x.id === p.id ? { ...x, period: ev.target.value } : x),
-                        }))}
-                        placeholder="2023"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className={labelClass}>Details (optional)</label>
-                    <textarea
-                      className={`${inputClass} min-h-[60px] resize-y`}
-                      value={p.details ?? ""}
-                      onChange={(ev) => setData((d) => ({
-                        ...d,
-                        projects: d.projects.map((x) => x.id === p.id ? { ...x, details: ev.target.value } : x),
-                      }))}
-                      placeholder="Tech stack, impact..."
-                    />
-                    <BulletGuidance text={p.details ?? ""} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
+          <ProjectsAccordion />
 
           {/* Skills */}
-          <section className="rounded-xl border border-[#2b2118] bg-[#f7f6f3] p-4">
-            <h2 className={sectionTitleClass}>Skills</h2>
-            <label className={labelClass}>Comma-separated</label>
-            <input
-              type="text"
-              className={inputClass}
-              value={data.skills.join(", ")}
-              onChange={(e) => setData((d) => ({
-                ...d,
-                skills: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
-              }))}
-              placeholder="TypeScript, React, Node.js, ..."
-            />
-          </section>
+          <SkillsAccordion />
 
           {/* Links */}
           <section className="rounded-xl border border-[#2b2118] bg-[#f7f6f3] p-4">

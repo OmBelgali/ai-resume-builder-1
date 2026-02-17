@@ -90,26 +90,137 @@ export function ResumeLivePreview() {
             <h2 className={`${styles.sectionHeaderSize} ${styles.sectionHeaderWeight} uppercase ${styles.sectionHeaderTracking} text-black/80 mb-2`}>
               Projects
             </h2>
-            <ul className="space-y-2">
+            <div className="space-y-3">
               {projects.map((p) => (
-                <li key={p.id} className={styles.bodyFontSize}>
-                  <span className="font-medium">{p.name || "—"}</span>
-                  {p.period && ` · ${p.period}`}
-                  {p.details && <p className={`text-black/70 mt-0.5 ${styles.bodyFontSize}`}>{p.details}</p>}
-                </li>
+                <div key={p.id} className="rounded border border-black/10 bg-white p-3">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <h3 className={`font-medium text-black ${styles.bodyFontSize}`}>
+                      {p.name || "Untitled Project"}
+                    </h3>
+                    <div className="flex gap-2 flex-shrink-0">
+                      {p.liveUrl && (
+                        <a
+                          href={p.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-black/60 hover:text-black"
+                          aria-label="Live URL"
+                        >
+                          🔗
+                        </a>
+                      )}
+                      {p.githubUrl && (
+                        <a
+                          href={p.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-black/60 hover:text-black"
+                          aria-label="GitHub"
+                        >
+                          ⭐
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                  {p.description && (
+                    <p className={`text-black/80 mb-2 ${styles.bodyFontSize}`}>{p.description}</p>
+                  )}
+                  {p.techStack && p.techStack.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      {p.techStack.map((tech) => (
+                        <span
+                          key={tech}
+                          className="inline-block rounded border border-black/20 bg-black/5 px-2 py-0.5 text-[10px] text-black/80"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
-            </ul>
+            </div>
           </section>
         )}
 
-        {skills.length > 0 && (
-          <section>
-            <h2 className={`${styles.sectionHeaderSize} ${styles.sectionHeaderWeight} uppercase ${styles.sectionHeaderTracking} text-black/80 mb-1`}>
-              Skills
-            </h2>
-            <p className={`${styles.bodyFontSize} text-black/90`}>{skills.join(", ")}</p>
-          </section>
-        )}
+        {(() => {
+          const skillsCategorized = data.skillsCategorized;
+          const hasSkills =
+            skillsCategorized &&
+            (skillsCategorized.technical.length > 0 ||
+              skillsCategorized.soft.length > 0 ||
+              skillsCategorized.tools.length > 0);
+
+          if (!hasSkills && skills.length === 0) return null;
+
+          return (
+            <section>
+              <h2 className={`${styles.sectionHeaderSize} ${styles.sectionHeaderWeight} uppercase ${styles.sectionHeaderTracking} text-black/80 mb-2`}>
+                Skills
+              </h2>
+              {skillsCategorized &&
+              (skillsCategorized.technical.length > 0 ||
+                skillsCategorized.soft.length > 0 ||
+                skillsCategorized.tools.length > 0) ? (
+                <div className="space-y-3">
+                  {skillsCategorized.technical.length > 0 && (
+                    <div>
+                      <h3 className={`text-[10px] font-medium text-black/70 mb-1.5 ${styles.bodyFontSize}`}>
+                        Technical Skills
+                      </h3>
+                      <div className="flex flex-wrap gap-1.5">
+                        {skillsCategorized.technical.map((skill) => (
+                          <span
+                            key={skill}
+                            className="inline-block rounded-full border border-black/20 bg-black/5 px-2.5 py-1 text-[11px] text-black/90"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {skillsCategorized.soft.length > 0 && (
+                    <div>
+                      <h3 className={`text-[10px] font-medium text-black/70 mb-1.5 ${styles.bodyFontSize}`}>
+                        Soft Skills
+                      </h3>
+                      <div className="flex flex-wrap gap-1.5">
+                        {skillsCategorized.soft.map((skill) => (
+                          <span
+                            key={skill}
+                            className="inline-block rounded-full border border-black/20 bg-black/5 px-2.5 py-1 text-[11px] text-black/90"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {skillsCategorized.tools.length > 0 && (
+                    <div>
+                      <h3 className={`text-[10px] font-medium text-black/70 mb-1.5 ${styles.bodyFontSize}`}>
+                        Tools & Technologies
+                      </h3>
+                      <div className="flex flex-wrap gap-1.5">
+                        {skillsCategorized.tools.map((skill) => (
+                          <span
+                            key={skill}
+                            className="inline-block rounded-full border border-black/20 bg-black/5 px-2.5 py-1 text-[11px] text-black/90"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <p className={`${styles.bodyFontSize} text-black/90`}>{skills.join(", ")}</p>
+              )}
+            </section>
+          );
+        })()}
 
         {(links.github || links.linkedin) && (
           <section>
@@ -131,11 +242,21 @@ export function ResumeLivePreview() {
           </section>
         )}
 
-        {!personal.name && !summary && education.length === 0 && experience.length === 0 && projects.length === 0 && skills.length === 0 && !links.github && !links.linkedin && (
-          <div className="flex items-center justify-center py-12 text-black/40 text-sm">
-            Resume preview — fill the form to see content here
-          </div>
-        )}
+        {!personal.name &&
+          !summary &&
+          education.length === 0 &&
+          experience.length === 0 &&
+          projects.length === 0 &&
+          skills.length === 0 &&
+          !data.skillsCategorized?.technical.length &&
+          !data.skillsCategorized?.soft.length &&
+          !data.skillsCategorized?.tools.length &&
+          !links.github &&
+          !links.linkedin && (
+            <div className="flex items-center justify-center py-12 text-black/40 text-sm">
+              Resume preview — fill the form to see content here
+            </div>
+          )}
       </div>
     </div>
   );

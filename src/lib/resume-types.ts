@@ -28,6 +28,16 @@ export interface ProjectEntry {
   name: string;
   period: string;
   details?: string;
+  description?: string;
+  techStack?: string[];
+  liveUrl?: string;
+  githubUrl?: string;
+}
+
+export interface SkillsData {
+  technical: string[];
+  soft: string[];
+  tools: string[];
 }
 
 export interface Links {
@@ -42,6 +52,7 @@ export interface ResumeData {
   experience: ExperienceEntry[];
   projects: ProjectEntry[];
   skills: string[];
+  skillsCategorized?: SkillsData;
   links: Links;
 }
 
@@ -57,6 +68,11 @@ export const defaultResumeData: ResumeData = {
   experience: [],
   projects: [],
   skills: [],
+  skillsCategorized: {
+    technical: [],
+    soft: [],
+    tools: [],
+  },
   links: { github: "", linkedin: "" },
 };
 
@@ -86,5 +102,9 @@ export function createProjectEntry(): ProjectEntry {
     name: "",
     period: "",
     details: "",
+    description: "",
+    techStack: [],
+    liveUrl: "",
+    githubUrl: "",
   };
 }

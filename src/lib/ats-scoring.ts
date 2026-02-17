@@ -52,14 +52,20 @@ export function calculateATSScore(data: ResumeData): ATSScore {
     suggestions.push("Add at least 1 experience entry.");
   }
 
-  // Check skills (≥ 8 items)
-  if (data.skills.length >= 8) {
+  // Check skills (≥ 8 items) - check categorized first, fallback to flat array
+  const totalSkills = data.skillsCategorized
+    ? data.skillsCategorized.technical.length +
+      data.skillsCategorized.soft.length +
+      data.skillsCategorized.tools.length
+    : data.skills.length;
+
+  if (totalSkills >= 8) {
     score += 10;
   } else {
-    if (data.skills.length === 0) {
+    if (totalSkills === 0) {
       suggestions.push("Add more skills (target 8+).");
     } else {
-      suggestions.push(`Add more skills (target 8+, currently ${data.skills.length}).`);
+      suggestions.push(`Add more skills (target 8+, currently ${totalSkills}).`);
     }
   }
 

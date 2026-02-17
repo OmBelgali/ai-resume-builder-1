@@ -94,9 +94,18 @@ const SAMPLE_DATA: ResumeData = {
       name: "Open Source CLI Tool",
       period: "2023",
       details: "TypeScript CLI with 2k+ weekly downloads. Maintained docs and issues.",
+      description: "A command-line tool built with TypeScript that helps developers automate common tasks.",
+      techStack: ["TypeScript", "Node.js", "CLI"],
+      liveUrl: "",
+      githubUrl: "https://github.com/example/cli-tool",
     },
   ],
   skills: ["TypeScript", "React", "Node.js", "PostgreSQL", "AWS"],
+  skillsCategorized: {
+    technical: ["TypeScript", "React", "Node.js", "PostgreSQL"],
+    soft: ["Team Leadership", "Problem Solving"],
+    tools: ["Git", "Docker", "AWS"],
+  },
   links: {
     github: "https://github.com/alexchen",
     linkedin: "https://linkedin.com/in/alexchen",
