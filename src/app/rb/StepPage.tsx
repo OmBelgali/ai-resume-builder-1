@@ -90,17 +90,26 @@ export function StepPage({ stepId, children }: StepPageProps) {
     }
   }, [hydrated, stepIndex]);
 
-  // Enforce no skipping: redirect to first incomplete step
+  // Check if previous steps are complete
+  const [canRender, setCanRender] = useState(true);
+  
+  // Enforce no skipping: redirect to first incomplete step and block rendering
   useEffect(() => {
-    if (!hydrated || stepIndex <= 0) return;
+    if (!hydrated || stepIndex <= 0) {
+      setCanRender(false);
+      return;
+    }
+    
     for (let i = 1; i < stepIndex; i += 1) {
       const prev = readArtifact(i);
       if (!prev) {
         const targetId = stepOrder[i - 1];
+        setCanRender(false);
         router.replace(`/rb/${targetId}`);
         return;
       }
     }
+    setCanRender(true);
   }, [hydrated, stepIndex, router]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,10 +140,10 @@ export function StepPage({ stepId, children }: StepPageProps) {
 
   const canGoNext = !!artifact && stepIndex < stepOrder.length;
 
-  if (!hydrated) {
+  if (!hydrated || !canRender) {
     return (
       <div className="flex h-full items-center justify-center text-xs text-[#6e6256]">
-        Loading step…
+        {!hydrated ? "Loading step…" : "Redirecting to previous step…"}
       </div>
     );
   }

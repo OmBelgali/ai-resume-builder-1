@@ -12,6 +12,11 @@ const navItems = [
 export function AppNav() {
   const pathname = usePathname();
 
+  // Don't show AppNav on /rb/* routes (they have their own layout)
+  if (pathname?.startsWith("/rb/")) {
+    return null;
+  }
+
   return (
     <header className="border-b border-[#2b2118] bg-[#f7f6f3]/95 backdrop-blur">
       <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
