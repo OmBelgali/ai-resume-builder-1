@@ -12,7 +12,7 @@ export function PreviewResume() {
   const styles = templateStyles[template];
 
   return (
-    <article className={`mx-auto max-w-[210mm] bg-white text-black ${styles.padding} shadow-lg`}>
+    <article className={`resume-container mx-auto max-w-[210mm] bg-white text-black ${styles.padding} shadow-lg`}>
       <div className={styles.sectionSpacing}>
         {/* Header */}
         <header className={`${styles.borderStyle} pb-4`}>
@@ -119,10 +119,10 @@ export function PreviewResume() {
 
         {(links.github || links.linkedin) && (
           <section>
-            <h2 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black mb-2">
+            <h2 className={`${styles.sectionHeaderSize} ${styles.sectionHeaderWeight} uppercase ${styles.sectionHeaderTracking} text-black mb-2`}>
               Links
             </h2>
-            <div className="flex gap-4 text-sm text-black/90">
+            <div className={`flex gap-4 ${styles.bodyFontSize} text-black/90`}>
               {links.github && (
                 <a href={links.github} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
                   GitHub
