@@ -2,6 +2,7 @@
 
 import { useResume } from "@/context/ResumeContext";
 import { ResumeLivePreview } from "@/components/ResumeLivePreview";
+import { ATSScore } from "@/components/ATSScore";
 
 const inputClass =
   "w-full rounded-lg border border-[#2b2118] bg-[#f7f6f3] px-3 py-2 text-sm text-[#2b2118] outline-none focus:border-[#8b0000] focus:ring-1 focus:ring-[#8b0000]/30";
@@ -365,10 +366,13 @@ export default function BuilderPage() {
           </section>
         </div>
 
-        {/* Right: Live preview */}
-        <div className="lg:sticky lg:top-6 lg:self-start">
-          <p className="text-xs text-[#6e6256] mb-2">Live preview</p>
-          <ResumeLivePreview />
+        {/* Right: ATS Score + Live preview */}
+        <div className="lg:sticky lg:top-6 lg:self-start space-y-6">
+          <ATSScore />
+          <div>
+            <p className="text-xs text-[#6e6256] mb-2">Live preview</p>
+            <ResumeLivePreview />
+          </div>
         </div>
       </div>
     </div>

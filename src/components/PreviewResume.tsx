@@ -22,8 +22,16 @@ export function PreviewResume() {
           </div>
           {(links.github || links.linkedin) && (
             <div className="flex gap-4 mt-2 text-sm text-black/70">
-              {links.github && <a href={links.github} className="underline underline-offset-2">GitHub</a>}
-              {links.linkedin && <a href={links.linkedin} className="underline underline-offset-2">LinkedIn</a>}
+              {links.github && (
+                <a href={links.github} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
+                  GitHub
+                </a>
+              )}
+              {links.linkedin && (
+                <a href={links.linkedin} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
+                  LinkedIn
+                </a>
+              )}
             </div>
           )}
         </header>
@@ -102,6 +110,26 @@ export function PreviewResume() {
               Skills
             </h2>
             <p className="text-sm text-black/90">{skills.join(" · ")}</p>
+          </section>
+        )}
+
+        {(links.github || links.linkedin) && (
+          <section>
+            <h2 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black mb-2">
+              Links
+            </h2>
+            <div className="flex gap-4 text-sm text-black/90">
+              {links.github && (
+                <a href={links.github} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
+                  GitHub
+                </a>
+              )}
+              {links.linkedin && (
+                <a href={links.linkedin} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
+                  LinkedIn
+                </a>
+              )}
+            </div>
           </section>
         )}
       </div>

@@ -4,6 +4,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -15,6 +16,28 @@ import {
   createExperienceEntry,
   createProjectEntry,
 } from "@/lib/resume-types";
+
+const STORAGE_KEY = "resumeBuilderData";
+
+function loadFromStorage(): ResumeData | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (!stored) return null;
+    return JSON.parse(stored) as ResumeData;
+  } catch {
+    return null;
+  }
+}
+
+function saveToStorage(data: ResumeData): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch {
+    // Ignore storage errors
+  }
+}
 
 type ResumeContextValue = {
   data: ResumeData;
@@ -81,7 +104,16 @@ const SAMPLE_DATA: ResumeData = {
 };
 
 export function ResumeProvider({ children }: { children: ReactNode }) {
-  const [data, setData] = useState<ResumeData>(defaultResumeData);
+  // Load from localStorage on mount
+  const [data, setData] = useState<ResumeData>(() => {
+    const stored = loadFromStorage();
+    return stored || defaultResumeData;
+  });
+
+  // Auto-save to localStorage whenever data changes
+  useEffect(() => {
+    saveToStorage(data);
+  }, [data]);
 
   const addEducation = useCallback(() => {
     setData((prev) => ({

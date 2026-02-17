@@ -21,9 +21,17 @@ export function ResumeLivePreview() {
             {personal.location && <span>{personal.location}</span>}
           </div>
           {(links.github || links.linkedin) && (
-            <div className="flex gap-3 mt-2 text-xs">
-              {links.github && <span>GitHub</span>}
-              {links.linkedin && <span>LinkedIn</span>}
+            <div className="flex gap-3 mt-2 text-xs text-black/70">
+              {links.github && (
+                <a href={links.github} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  GitHub
+                </a>
+              )}
+              {links.linkedin && (
+                <a href={links.linkedin} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  LinkedIn
+                </a>
+              )}
             </div>
           )}
         </header>
@@ -99,7 +107,27 @@ export function ResumeLivePreview() {
           </section>
         )}
 
-        {!personal.name && !summary && education.length === 0 && experience.length === 0 && projects.length === 0 && skills.length === 0 && (
+        {(links.github || links.linkedin) && (
+          <section>
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-black/80 mb-1">
+              Links
+            </h2>
+            <div className="flex gap-3 text-sm text-black/90">
+              {links.github && (
+                <a href={links.github} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  GitHub
+                </a>
+              )}
+              {links.linkedin && (
+                <a href={links.linkedin} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  LinkedIn
+                </a>
+              )}
+            </div>
+          </section>
+        )}
+
+        {!personal.name && !summary && education.length === 0 && experience.length === 0 && projects.length === 0 && skills.length === 0 && !links.github && !links.linkedin && (
           <div className="flex items-center justify-center py-12 text-black/40 text-sm">
             Resume preview — fill the form to see content here
           </div>
