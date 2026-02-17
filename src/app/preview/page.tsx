@@ -1,7 +1,8 @@
 "use client";
 
 import { PreviewResume } from "@/components/PreviewResume";
-import { TemplateSelector } from "@/components/TemplateSelector";
+import { TemplateThumbnails } from "@/components/TemplateThumbnails";
+import { ColorPicker } from "@/components/ColorPicker";
 import { ExportButtons } from "@/components/ExportButtons";
 
 export default function PreviewPage() {
@@ -12,7 +13,10 @@ export default function PreviewPage() {
           <p className="text-xs text-[#6e6256] mb-4 text-center">
             Preview — minimal black & white layout
           </p>
-          <TemplateSelector />
+          <div className="rounded-xl border border-[#2b2118] bg-[#f7f6f3] p-4">
+            <TemplateThumbnails />
+            <ColorPicker />
+          </div>
           <ExportButtons />
         </div>
         <PreviewResume />

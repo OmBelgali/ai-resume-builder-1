@@ -7,6 +7,8 @@ import { TemplateSelector } from "@/components/TemplateSelector";
 import { BulletGuidance } from "@/components/BulletGuidance";
 import { SkillsAccordion } from "@/components/SkillsAccordion";
 import { ProjectsAccordion } from "@/components/ProjectsAccordion";
+import { TemplateThumbnails } from "@/components/TemplateThumbnails";
+import { ColorPicker } from "@/components/ColorPicker";
 
 const inputClass =
   "w-full rounded-lg border border-[#2b2118] bg-[#f7f6f3] px-3 py-2 text-sm text-[#2b2118] outline-none focus:border-[#8b0000] focus:ring-1 focus:ring-[#8b0000]/30";
@@ -294,8 +296,12 @@ export default function BuilderPage() {
           </section>
         </div>
 
-        {/* Right: ATS Score + Live preview */}
+        {/* Right: Template/Color pickers + ATS Score + Live preview */}
         <div className="lg:sticky lg:top-6 lg:self-start space-y-6">
+          <div className="rounded-xl border border-[#2b2118] bg-[#f7f6f3] p-4">
+            <TemplateThumbnails />
+            <ColorPicker />
+          </div>
           <ATSScoreWithImprovements />
           <div>
             <p className="text-xs text-[#6e6256] mb-2">Live preview</p>

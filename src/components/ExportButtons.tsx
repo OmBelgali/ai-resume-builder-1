@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { useResume } from "@/context/ResumeContext";
 import { generatePlainText, validateResume } from "@/lib/export-utils";
+import { Toast } from "@/components/Toast";
 
 export function ExportButtons() {
   const { data } = useResume();
   const [copied, setCopied] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   const handlePrint = () => {
     const validation = validateResume(data);
@@ -15,6 +17,9 @@ export function ExportButtons() {
       setShowWarning(true);
       setTimeout(() => setShowWarning(false), 5000);
     }
+
+    // Show toast notification
+    setShowToast(true);
 
     // Trigger browser print dialog
     window.print();
@@ -81,6 +86,13 @@ export function ExportButtons() {
             ))}
           </ul>
         </div>
+      )}
+
+      {showToast && (
+        <Toast
+          message="PDF export ready! Check your downloads."
+          onClose={() => setShowToast(false)}
+        />
       )}
     </div>
   );

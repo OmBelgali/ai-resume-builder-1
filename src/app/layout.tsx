@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ResumeProvider } from "@/context/ResumeContext";
 import { TemplateProvider } from "@/context/TemplateContext";
+import { ColorThemeProvider } from "@/context/ColorThemeContext";
 import { AppNav } from "@/components/AppNav";
 import "./globals.css";
 
@@ -32,8 +33,10 @@ export default function RootLayout({
       >
         <ResumeProvider>
           <TemplateProvider>
-            <AppNav />
-            <main className="flex-1">{children}</main>
+            <ColorThemeProvider>
+              <AppNav />
+              <main className="flex-1">{children}</main>
+            </ColorThemeProvider>
           </TemplateProvider>
         </ResumeProvider>
       </body>
