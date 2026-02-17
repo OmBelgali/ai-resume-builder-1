@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 
 const steps = [
   { id: 1, slug: "01-problem", label: "Problem" },
@@ -48,10 +48,55 @@ function useStepsProgress() {
   return { completed };
 }
 
+function isValidUrl(url: string): boolean {
+  if (!url.trim()) return false;
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function isProjectShipped(): boolean {
+  if (typeof window === "undefined") return false;
+
+  // Check all 8 steps completed
+  for (let i = 1; i <= 8; i++) {
+    if (!isStepComplete(i)) return false;
+  }
+
+  // Check all 10 checklist items
+  for (let i = 1; i <= 10; i++) {
+    const checked = window.localStorage.getItem(`rb_checklist_item_${i}`);
+    if (checked !== "true") return false;
+  }
+
+  // Check all 3 proof links provided
+  const submission = window.localStorage.getItem("rb_final_submission");
+  if (!submission) return false;
+
+  try {
+    const data = JSON.parse(submission);
+    if (!isValidUrl(data.lovableLink)) return false;
+    if (!isValidUrl(data.githubLink)) return false;
+    if (!isValidUrl(data.deployLink)) return false;
+  } catch {
+    return false;
+  }
+
+  return true;
+}
+
 export default function RbLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const currentStep = useMemo(() => getStepFromPath(pathname), [pathname]);
   const { completed } = useStepsProgress();
+  const [shipped, setShipped] = useState(false);
+
+  useEffect(() => {
+    setShipped(isProjectShipped());
+  }, [pathname]);
 
   const statusText =
     currentStep && currentStep >= 1 && currentStep <= 8
@@ -73,8 +118,11 @@ export default function RbLayout({ children }: { children: ReactNode }) {
               : "Build Track"}
           </div>
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center rounded-full border border-[#8b0000] bg-[#8b0000]/10 px-3 py-1 text-xs font-medium text-[#8b0000]">
-              Active Track
+            <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${shipped
+                ? "border-[#16a34a] bg-[#dcfce7] text-[#16a34a]"
+                : "border-[#8b0000] bg-[#8b0000]/10 text-[#8b0000]"
+              }`}>
+              {shipped ? "Shipped" : "In Progress"}
             </span>
           </div>
         </div>

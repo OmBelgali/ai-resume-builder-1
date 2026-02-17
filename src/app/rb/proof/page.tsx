@@ -14,10 +14,29 @@ const steps = [
   { index: 8, id: "08-ship", label: "Ship" },
 ];
 
+const checklistItems = [
+  "All form sections save to localStorage",
+  "Live preview updates in real-time",
+  "Template switching preserves data",
+  "Color theme persists after refresh",
+  "ATS score calculates correctly",
+  "Score updates live on edit",
+  "Export buttons work (copy/download)",
+  "Empty states handled gracefully",
+  "Mobile responsive layout works",
+  "No console errors on any page",
+];
+
 interface StoredArtifact {
   id: string;
   fileName?: string;
   uploadedAt: string;
+}
+
+interface FinalSubmission {
+  lovableLink: string;
+  githubLink: string;
+  deployLink: string;
 }
 
 function keyFor(index: number) {
@@ -35,6 +54,43 @@ function readArtifact(index: number): StoredArtifact | null {
   }
 }
 
+function isValidUrl(url: string): boolean {
+  if (!url.trim()) return false;
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function readFinalSubmission(): FinalSubmission | null {
+  if (typeof window === "undefined") return null;
+  const raw = window.localStorage.getItem("rb_final_submission");
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as FinalSubmission;
+  } catch {
+    return null;
+  }
+}
+
+function saveFinalSubmission(data: FinalSubmission) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem("rb_final_submission", JSON.stringify(data));
+}
+
+function readChecklistItem(index: number): boolean {
+  if (typeof window === "undefined") return false;
+  const raw = window.localStorage.getItem(`rb_checklist_item_${index}`);
+  return raw === "true";
+}
+
+function saveChecklistItem(index: number, checked: boolean) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(`rb_checklist_item_${index}`, String(checked));
+}
+
 export default function ProofPage() {
   const router = useRouter();
   const [hydrated, setHydrated] = useState(false);
@@ -44,7 +100,15 @@ export default function ProofPage() {
   const [lovableLink, setLovableLink] = useState("");
   const [githubLink, setGithubLink] = useState("");
   const [deployLink, setDeployLink] = useState("");
+  const [checklist, setChecklist] = useState<boolean[]>(() =>
+    checklistItems.map(() => false),
+  );
   const [copied, setCopied] = useState(false);
+  const [urlErrors, setUrlErrors] = useState({
+    lovable: "",
+    github: "",
+    deploy: "",
+  });
 
   useEffect(() => {
     setHydrated(true);
@@ -55,6 +119,20 @@ export default function ProofPage() {
     const nextArtifacts = steps.map((step) => readArtifact(step.index));
     setArtifacts(nextArtifacts);
 
+    // Load final submission data
+    const submission = readFinalSubmission();
+    if (submission) {
+      setLovableLink(submission.lovableLink);
+      setGithubLink(submission.githubLink);
+      setDeployLink(submission.deployLink);
+    }
+
+    // Load checklist state
+    const nextChecklist = checklistItems.map((_, idx) =>
+      readChecklistItem(idx + 1),
+    );
+    setChecklist(nextChecklist);
+
     // If any step is incomplete, send the user back to the first incomplete one.
     const firstIncompleteIndex = nextArtifacts.findIndex((a) => !a);
     if (firstIncompleteIndex !== -1) {
@@ -63,29 +141,84 @@ export default function ProofPage() {
     }
   }, [hydrated, router]);
 
-  const allComplete = useMemo(
+  const allStepsComplete = useMemo(
     () => artifacts.every(Boolean),
     [artifacts],
   );
 
+  const allChecklistComplete = useMemo(
+    () => checklist.every(Boolean),
+    [checklist],
+  );
+
+  const allLinksValid = useMemo(() => {
+    return (
+      isValidUrl(lovableLink) &&
+      isValidUrl(githubLink) &&
+      isValidUrl(deployLink)
+    );
+  }, [lovableLink, githubLink, deployLink]);
+
+  const isShipped = useMemo(() => {
+    return allStepsComplete && allChecklistComplete && allLinksValid;
+  }, [allStepsComplete, allChecklistComplete, allLinksValid]);
+
+  const handleLinkChange = (
+    field: "lovable" | "github" | "deploy",
+    value: string,
+  ) => {
+    const newSubmission: FinalSubmission = {
+      lovableLink: field === "lovable" ? value : lovableLink,
+      githubLink: field === "github" ? value : githubLink,
+      deployLink: field === "deploy" ? value : deployLink,
+    };
+
+    if (field === "lovable") {
+      setLovableLink(value);
+      setUrlErrors((prev) => ({
+        ...prev,
+        lovable: value && !isValidUrl(value) ? "Invalid URL" : "",
+      }));
+    } else if (field === "github") {
+      setGithubLink(value);
+      setUrlErrors((prev) => ({
+        ...prev,
+        github: value && !isValidUrl(value) ? "Invalid URL" : "",
+      }));
+    } else {
+      setDeployLink(value);
+      setUrlErrors((prev) => ({
+        ...prev,
+        deploy: value && !isValidUrl(value) ? "Invalid URL" : "",
+      }));
+    }
+
+    saveFinalSubmission(newSubmission);
+  };
+
+  const handleChecklistToggle = (index: number) => {
+    const newChecklist = [...checklist];
+    newChecklist[index] = !newChecklist[index];
+    setChecklist(newChecklist);
+    saveChecklistItem(index + 1, newChecklist[index]);
+  };
+
   const handleCopy = async () => {
     const lines: string[] = [];
-    lines.push("AI Resume Builder — Build Track");
-    lines.push("Final Submission");
+    lines.push("------------------------------------------");
+    lines.push("AI Resume Builder — Final Submission");
     lines.push("");
-    lines.push("Step Status:");
-    steps.forEach((step, idx) => {
-      const artifact = artifacts[idx];
-      lines.push(
-        `- Step ${step.index} — ${step.label}: ${
-          artifact ? "Complete" : "Missing"
-        }`,
-      );
-    });
+    lines.push(`Lovable Project: ${lovableLink || "N/A"}`);
+    lines.push(`GitHub Repository: ${githubLink || "N/A"}`);
+    lines.push(`Live Deployment: ${deployLink || "N/A"}`);
     lines.push("");
-    lines.push(`Lovable project: ${lovableLink || "N/A"}`);
-    lines.push(`GitHub repo: ${githubLink || "N/A"}`);
-    lines.push(`Production deploy: ${deployLink || "N/A"}`);
+    lines.push("Core Capabilities:");
+    lines.push("- Structured resume builder");
+    lines.push("- Deterministic ATS scoring");
+    lines.push("- Template switching");
+    lines.push("- PDF export with clean formatting");
+    lines.push("- Persistence + validation checklist");
+    lines.push("------------------------------------------");
 
     try {
       await navigator.clipboard.writeText(lines.join("\n"));
@@ -111,15 +244,24 @@ export default function ProofPage() {
           Proof &amp; Submission
         </p>
         <p className="text-xs text-[#6e6256]">
-          Review all 8 steps, add your links, and copy a final submission
+          Review all 8 steps, complete the testing checklist, add your links, and copy a final submission
           payload you can paste into the track.
         </p>
       </header>
 
+      {/* Shipped confirmation */}
+      {isShipped && (
+        <div className="rounded-lg border border-[#16a34a] bg-[#dcfce7] p-4 text-center">
+          <p className="text-sm font-medium text-[#16a34a]">
+            Project 3 Shipped Successfully.
+          </p>
+        </div>
+      )}
+
       {/* 8-step status */}
       <section className="space-y-3 rounded-lg border border-[#2b2118] bg-[#f7f6f3] p-4">
         <h2 className="text-xs font-semibold text-[#2b2118]">
-          8-step status
+          Step Completion Overview
         </h2>
         <ol className="space-y-2 text-xs">
           {steps.map((step, idx) => {
@@ -137,11 +279,10 @@ export default function ProofPage() {
                   <span>{step.label}</span>
                 </div>
                 <span
-                  className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
-                    complete
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${complete
                       ? "bg-[#8b0000]/5 text-[#8b0000] border border-[#8b0000]"
                       : "bg-transparent text-[#6e6256] border border-[#2b2118]/40"
-                  }`}
+                    }`}
                 >
                   {complete ? "Complete" : "Missing"}
                 </span>
@@ -149,7 +290,7 @@ export default function ProofPage() {
             );
           })}
         </ol>
-        {!allComplete && (
+        {!allStepsComplete && (
           <p className="text-[11px] text-[#8b0000]">
             You can only submit once all 8 steps have artifacts. Missing steps will
             redirect you back into the rail.
@@ -157,43 +298,94 @@ export default function ProofPage() {
         )}
       </section>
 
-      {/* Links */}
+      {/* Testing Checklist */}
       <section className="space-y-3 rounded-lg border border-[#2b2118] bg-[#f7f6f3] p-4">
         <h2 className="text-xs font-semibold text-[#2b2118]">
-          Final links
+          Testing Checklist (Required to mark Shipped)
         </h2>
-        <div className="space-y-2 text-xs">
+        <div className="space-y-2">
+          {checklistItems.map((item, idx) => (
+            <label
+              key={idx}
+              className="flex items-start gap-2 text-xs cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                checked={checklist[idx]}
+                onChange={() => handleChecklistToggle(idx)}
+                className="mt-0.5 h-4 w-4 rounded border-[#2b2118] text-[#8b0000] focus:ring-[#8b0000] focus:ring-offset-0 cursor-pointer"
+              />
+              <span className="text-[#2b2118]">{item}</span>
+            </label>
+          ))}
+        </div>
+        {!allChecklistComplete && (
+          <p className="text-[11px] text-[#8b0000]">
+            All 10 checklist items must be tested and checked before marking as shipped.
+          </p>
+        )}
+      </section>
+
+      {/* Artifact Collection */}
+      <section className="space-y-3 rounded-lg border border-[#2b2118] bg-[#f7f6f3] p-4">
+        <h2 className="text-xs font-semibold text-[#2b2118]">
+          Artifact Collection (Required to mark Shipped)
+        </h2>
+        <div className="space-y-3 text-xs">
           <label className="block space-y-1">
-            <span className="text-[#6e6256]">Lovable project link</span>
+            <span className="text-[#6e6256]">Lovable project link *</span>
             <input
               type="url"
               value={lovableLink}
-              onChange={(e) => setLovableLink(e.target.value)}
+              onChange={(e) => handleLinkChange("lovable", e.target.value)}
               placeholder="https://app.lovable.dev/..."
-              className="w-full rounded-md border border-[#2b2118] bg-[#f7f6f3] px-3 py-2 text-xs text-[#2b2118] outline-none focus:border-[#8b0000] focus:ring-1 focus:ring-[#8b0000]/40"
+              className={`w-full rounded-md border ${urlErrors.lovable
+                  ? "border-[#8b0000]"
+                  : "border-[#2b2118]"
+                } bg-[#f7f6f3] px-3 py-2 text-xs text-[#2b2118] outline-none focus:border-[#8b0000] focus:ring-1 focus:ring-[#8b0000]/40`}
             />
+            {urlErrors.lovable && (
+              <p className="text-[11px] text-[#8b0000]">{urlErrors.lovable}</p>
+            )}
           </label>
           <label className="block space-y-1">
-            <span className="text-[#6e6256]">GitHub repository link</span>
+            <span className="text-[#6e6256]">GitHub repository link *</span>
             <input
               type="url"
               value={githubLink}
-              onChange={(e) => setGithubLink(e.target.value)}
+              onChange={(e) => handleLinkChange("github", e.target.value)}
               placeholder="https://github.com/..."
-              className="w-full rounded-md border border-[#2b2118] bg-[#f7f6f3] px-3 py-2 text-xs text-[#2b2118] outline-none focus:border-[#8b0000] focus:ring-1 focus:ring-[#8b0000]/40"
+              className={`w-full rounded-md border ${urlErrors.github
+                  ? "border-[#8b0000]"
+                  : "border-[#2b2118]"
+                } bg-[#f7f6f3] px-3 py-2 text-xs text-[#2b2118] outline-none focus:border-[#8b0000] focus:ring-1 focus:ring-[#8b0000]/40`}
             />
+            {urlErrors.github && (
+              <p className="text-[11px] text-[#8b0000]">{urlErrors.github}</p>
+            )}
           </label>
           <label className="block space-y-1">
-            <span className="text-[#6e6256]">Production deploy link</span>
+            <span className="text-[#6e6256]">Deployed URL *</span>
             <input
               type="url"
               value={deployLink}
-              onChange={(e) => setDeployLink(e.target.value)}
+              onChange={(e) => handleLinkChange("deploy", e.target.value)}
               placeholder="https://your-vercel-deploy-url"
-              className="w-full rounded-md border border-[#2b2118] bg-[#f7f6f3] px-3 py-2 text-xs text-[#2b2118] outline-none focus:border-[#8b0000] focus:ring-1 focus:ring-[#8b0000]/40"
+              className={`w-full rounded-md border ${urlErrors.deploy
+                  ? "border-[#8b0000]"
+                  : "border-[#2b2118]"
+                } bg-[#f7f6f3] px-3 py-2 text-xs text-[#2b2118] outline-none focus:border-[#8b0000] focus:ring-1 focus:ring-[#8b0000]/40`}
             />
+            {urlErrors.deploy && (
+              <p className="text-[11px] text-[#8b0000]">{urlErrors.deploy}</p>
+            )}
           </label>
         </div>
+        {!allLinksValid && (
+          <p className="text-[11px] text-[#8b0000]">
+            All 3 proof links must be valid URLs before marking as shipped.
+          </p>
+        )}
       </section>
 
       {/* Copy final submission */}
@@ -204,12 +396,11 @@ export default function ProofPage() {
         <button
           type="button"
           onClick={handleCopy}
-          disabled={!allComplete}
-          className={`inline-flex items-center justify-center rounded-lg px-3 py-2 text-xs font-medium transition ${
-            allComplete
+          disabled={!isShipped}
+          className={`inline-flex items-center justify-center rounded-lg px-3 py-2 text-xs font-medium transition ${isShipped
               ? "bg-[#8b0000] text-[#f7f6f3] hover:bg-[#8b0000]/90"
               : "bg-transparent text-[#6e6256] border border-[#2b2118]/40 cursor-not-allowed"
-          }`}
+            }`}
         >
           {copied ? "Copied!" : "Copy Final Submission"}
         </button>
@@ -217,4 +408,3 @@ export default function ProofPage() {
     </div>
   );
 }
-
