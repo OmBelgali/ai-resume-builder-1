@@ -2,6 +2,7 @@
 
 import { useResume } from "@/context/ResumeContext";
 import { calculateATSScore } from "@/lib/ats-scoring";
+import { ImprovementPanel } from "@/components/ImprovementPanel";
 import { useMemo } from "react";
 
 export function ATSScore() {
@@ -69,6 +70,15 @@ export function ATSScore() {
           </p>
         </div>
       )}
+    </div>
+  );
+}
+
+export function ATSScoreWithImprovements() {
+  return (
+    <div className="space-y-6">
+      <ATSScore />
+      <ImprovementPanel />
     </div>
   );
 }

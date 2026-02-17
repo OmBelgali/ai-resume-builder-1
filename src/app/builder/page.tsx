@@ -2,7 +2,9 @@
 
 import { useResume } from "@/context/ResumeContext";
 import { ResumeLivePreview } from "@/components/ResumeLivePreview";
-import { ATSScore } from "@/components/ATSScore";
+import { ATSScoreWithImprovements } from "@/components/ATSScore";
+import { TemplateSelector } from "@/components/TemplateSelector";
+import { BulletGuidance } from "@/components/BulletGuidance";
 
 const inputClass =
   "w-full rounded-lg border border-[#2b2118] bg-[#f7f6f3] px-3 py-2 text-sm text-[#2b2118] outline-none focus:border-[#8b0000] focus:ring-1 focus:ring-[#8b0000]/30";
@@ -26,6 +28,8 @@ export default function BuilderPage() {
           Load Sample Data
         </button>
       </div>
+
+      <TemplateSelector />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left: Form */}
@@ -247,6 +251,7 @@ export default function BuilderPage() {
                       }))}
                       placeholder="Key responsibilities, achievements..."
                     />
+                    <BulletGuidance text={e.details ?? ""} />
                   </div>
                 </div>
               ))}
@@ -316,6 +321,7 @@ export default function BuilderPage() {
                       }))}
                       placeholder="Tech stack, impact..."
                     />
+                    <BulletGuidance text={p.details ?? ""} />
                   </div>
                 </div>
               ))}
@@ -368,7 +374,7 @@ export default function BuilderPage() {
 
         {/* Right: ATS Score + Live preview */}
         <div className="lg:sticky lg:top-6 lg:self-start space-y-6">
-          <ATSScore />
+          <ATSScoreWithImprovements />
           <div>
             <p className="text-xs text-[#6e6256] mb-2">Live preview</p>
             <ResumeLivePreview />

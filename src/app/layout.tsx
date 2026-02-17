@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ResumeProvider } from "@/context/ResumeContext";
+import { TemplateProvider } from "@/context/TemplateContext";
 import { AppNav } from "@/components/AppNav";
 import "./globals.css";
 
@@ -30,8 +31,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#f7f6f3] text-[#2b2118] min-h-screen flex flex-col`}
       >
         <ResumeProvider>
-          <AppNav />
-          <main className="flex-1">{children}</main>
+          <TemplateProvider>
+            <AppNav />
+            <main className="flex-1">{children}</main>
+          </TemplateProvider>
         </ResumeProvider>
       </body>
     </html>

@@ -1,18 +1,22 @@
 "use client";
 
 import { useResume } from "@/context/ResumeContext";
+import { useTemplate } from "@/context/TemplateContext";
+import { templateStyles } from "@/lib/template-types";
 
 /** Structured resume layout shell for builder right panel — live-updating placeholder. */
 export function ResumeLivePreview() {
   const { data } = useResume();
+  const { template } = useTemplate();
   const { personal, summary, education, experience, projects, skills, links } = data;
+  const styles = templateStyles[template];
 
   return (
-    <div className="h-full min-h-[640px] rounded-xl border border-[#2b2118] bg-white p-6 shadow-sm">
-      <div className="resume-preview text-black space-y-5">
+    <div className={`h-full min-h-[640px] rounded-xl border border-[#2b2118] bg-white ${styles.padding} shadow-sm`}>
+      <div className={`resume-preview text-black ${styles.sectionSpacing}`}>
         {/* Header */}
-        <header className="border-b border-black/20 pb-3">
-          <h1 className="text-xl font-semibold tracking-tight font-serif">
+        <header className={`${styles.borderStyle} pb-3`}>
+          <h1 className={`${styles.headerFontSize} font-semibold tracking-tight font-serif ${styles.headerSpacing}`}>
             {personal.name || "Your Name"}
           </h1>
           <div className="flex flex-wrap gap-x-4 gap-y-0 text-xs text-black/70 mt-1">
@@ -38,25 +42,25 @@ export function ResumeLivePreview() {
 
         {summary && (
           <section>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-black/80 mb-1">
+            <h2 className={`${styles.sectionHeaderSize} ${styles.sectionHeaderWeight} uppercase ${styles.sectionHeaderTracking} text-black/80 mb-1`}>
               Summary
             </h2>
-            <p className="text-sm text-black/90 leading-relaxed">{summary}</p>
+            <p className={`${styles.bodyFontSize} text-black/90 ${styles.lineHeight}`}>{summary}</p>
           </section>
         )}
 
         {education.length > 0 && (
           <section>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-black/80 mb-2">
+            <h2 className={`${styles.sectionHeaderSize} ${styles.sectionHeaderWeight} uppercase ${styles.sectionHeaderTracking} text-black/80 mb-2`}>
               Education
             </h2>
             <ul className="space-y-2">
               {education.map((e) => (
-                <li key={e.id} className="text-sm">
+                <li key={e.id} className={styles.bodyFontSize}>
                   <span className="font-medium">{e.institution || "—"}</span>
                   {e.degree && ` · ${e.degree}`}
                   {e.period && ` · ${e.period}`}
-                  {e.details && <p className="text-black/70 mt-0.5">{e.details}</p>}
+                  {e.details && <p className={`text-black/70 mt-0.5 ${styles.bodyFontSize}`}>{e.details}</p>}
                 </li>
               ))}
             </ul>
@@ -65,16 +69,16 @@ export function ResumeLivePreview() {
 
         {experience.length > 0 && (
           <section>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-black/80 mb-2">
+            <h2 className={`${styles.sectionHeaderSize} ${styles.sectionHeaderWeight} uppercase ${styles.sectionHeaderTracking} text-black/80 mb-2`}>
               Experience
             </h2>
             <ul className="space-y-2">
               {experience.map((e) => (
-                <li key={e.id} className="text-sm">
+                <li key={e.id} className={styles.bodyFontSize}>
                   <span className="font-medium">{e.company || "—"}</span>
                   {e.role && ` · ${e.role}`}
                   {e.period && ` · ${e.period}`}
-                  {e.details && <p className="text-black/70 mt-0.5">{e.details}</p>}
+                  {e.details && <p className={`text-black/70 mt-0.5 ${styles.bodyFontSize}`}>{e.details}</p>}
                 </li>
               ))}
             </ul>
@@ -83,15 +87,15 @@ export function ResumeLivePreview() {
 
         {projects.length > 0 && (
           <section>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-black/80 mb-2">
+            <h2 className={`${styles.sectionHeaderSize} ${styles.sectionHeaderWeight} uppercase ${styles.sectionHeaderTracking} text-black/80 mb-2`}>
               Projects
             </h2>
             <ul className="space-y-2">
               {projects.map((p) => (
-                <li key={p.id} className="text-sm">
+                <li key={p.id} className={styles.bodyFontSize}>
                   <span className="font-medium">{p.name || "—"}</span>
                   {p.period && ` · ${p.period}`}
-                  {p.details && <p className="text-black/70 mt-0.5">{p.details}</p>}
+                  {p.details && <p className={`text-black/70 mt-0.5 ${styles.bodyFontSize}`}>{p.details}</p>}
                 </li>
               ))}
             </ul>
@@ -100,19 +104,19 @@ export function ResumeLivePreview() {
 
         {skills.length > 0 && (
           <section>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-black/80 mb-1">
+            <h2 className={`${styles.sectionHeaderSize} ${styles.sectionHeaderWeight} uppercase ${styles.sectionHeaderTracking} text-black/80 mb-1`}>
               Skills
             </h2>
-            <p className="text-sm text-black/90">{skills.join(", ")}</p>
+            <p className={`${styles.bodyFontSize} text-black/90`}>{skills.join(", ")}</p>
           </section>
         )}
 
         {(links.github || links.linkedin) && (
           <section>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-black/80 mb-1">
+            <h2 className={`${styles.sectionHeaderSize} ${styles.sectionHeaderWeight} uppercase ${styles.sectionHeaderTracking} text-black/80 mb-1`}>
               Links
             </h2>
-            <div className="flex gap-3 text-sm text-black/90">
+            <div className={`flex gap-3 ${styles.bodyFontSize} text-black/90`}>
               {links.github && (
                 <a href={links.github} target="_blank" rel="noopener noreferrer" className="hover:underline">
                   GitHub

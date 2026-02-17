@@ -1,18 +1,22 @@
 "use client";
 
 import { useResume } from "@/context/ResumeContext";
+import { useTemplate } from "@/context/TemplateContext";
+import { templateStyles } from "@/lib/template-types";
 
 /** Premium B&W resume layout for /preview — clean typography, no colors. */
 export function PreviewResume() {
   const { data } = useResume();
+  const { template } = useTemplate();
   const { personal, summary, education, experience, projects, skills, links } = data;
+  const styles = templateStyles[template];
 
   return (
-    <article className="mx-auto max-w-[210mm] bg-white text-black p-10 sm:p-14 shadow-lg">
-      <div className="space-y-8">
+    <article className={`mx-auto max-w-[210mm] bg-white text-black ${styles.padding} shadow-lg`}>
+      <div className={styles.sectionSpacing}>
         {/* Header */}
-        <header className="border-b border-black pb-4">
-          <h1 className="text-2xl font-semibold tracking-tight font-serif text-black">
+        <header className={`${styles.borderStyle} pb-4`}>
+          <h1 className={`${styles.headerFontSize} font-semibold tracking-tight font-serif text-black ${styles.headerSpacing}`}>
             {personal.name || "Your Name"}
           </h1>
           <div className="flex flex-wrap gap-x-5 gap-y-0 mt-2 text-sm text-black/70">
@@ -38,16 +42,16 @@ export function PreviewResume() {
 
         {summary && (
           <section>
-            <h2 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black mb-2">
+            <h2 className={`${styles.sectionHeaderSize} ${styles.sectionHeaderWeight} uppercase ${styles.sectionHeaderTracking} text-black mb-2`}>
               Summary
             </h2>
-            <p className="text-sm leading-relaxed text-black/90">{summary}</p>
+            <p className={`${styles.bodyFontSize} ${styles.lineHeight} text-black/90`}>{summary}</p>
           </section>
         )}
 
         {education.length > 0 && (
           <section>
-            <h2 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black mb-3">
+            <h2 className={`${styles.sectionHeaderSize} ${styles.sectionHeaderWeight} uppercase ${styles.sectionHeaderTracking} text-black mb-3`}>
               Education
             </h2>
             <ul className="space-y-3">
@@ -57,8 +61,8 @@ export function PreviewResume() {
                     <span className="font-medium text-black">{e.institution || "—"}</span>
                     {e.period && <span className="text-sm text-black/70">{e.period}</span>}
                   </div>
-                  {e.degree && <p className="text-sm text-black/80 mt-0.5">{e.degree}</p>}
-                  {e.details && <p className="text-sm text-black/70 mt-1">{e.details}</p>}
+                  {e.degree && <p className={`${styles.bodyFontSize} text-black/80 mt-0.5`}>{e.degree}</p>}
+                  {e.details && <p className={`${styles.bodyFontSize} text-black/70 mt-1`}>{e.details}</p>}
                 </li>
               ))}
             </ul>
@@ -67,18 +71,18 @@ export function PreviewResume() {
 
         {experience.length > 0 && (
           <section>
-            <h2 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black mb-3">
+            <h2 className={`${styles.sectionHeaderSize} ${styles.sectionHeaderWeight} uppercase ${styles.sectionHeaderTracking} text-black mb-3`}>
               Experience
             </h2>
             <ul className="space-y-3">
               {experience.map((e) => (
                 <li key={e.id}>
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <span className="font-medium text-black">{e.company || "—"}</span>
-                    {e.period && <span className="text-sm text-black/70">{e.period}</span>}
+                    <span className={`font-medium text-black ${styles.bodyFontSize}`}>{e.company || "—"}</span>
+                    {e.period && <span className={`${styles.bodyFontSize} text-black/70`}>{e.period}</span>}
                   </div>
-                  {e.role && <p className="text-sm text-black/80 mt-0.5">{e.role}</p>}
-                  {e.details && <p className="text-sm text-black/70 mt-1">{e.details}</p>}
+                  {e.role && <p className={`${styles.bodyFontSize} text-black/80 mt-0.5`}>{e.role}</p>}
+                  {e.details && <p className={`${styles.bodyFontSize} text-black/70 mt-1`}>{e.details}</p>}
                 </li>
               ))}
             </ul>
@@ -87,17 +91,17 @@ export function PreviewResume() {
 
         {projects.length > 0 && (
           <section>
-            <h2 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black mb-3">
+            <h2 className={`${styles.sectionHeaderSize} ${styles.sectionHeaderWeight} uppercase ${styles.sectionHeaderTracking} text-black mb-3`}>
               Projects
             </h2>
             <ul className="space-y-3">
               {projects.map((p) => (
                 <li key={p.id}>
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <span className="font-medium text-black">{p.name || "—"}</span>
-                    {p.period && <span className="text-sm text-black/70">{p.period}</span>}
+                    <span className={`font-medium text-black ${styles.bodyFontSize}`}>{p.name || "—"}</span>
+                    {p.period && <span className={`${styles.bodyFontSize} text-black/70`}>{p.period}</span>}
                   </div>
-                  {p.details && <p className="text-sm text-black/70 mt-1">{p.details}</p>}
+                  {p.details && <p className={`${styles.bodyFontSize} text-black/70 mt-1`}>{p.details}</p>}
                 </li>
               ))}
             </ul>
@@ -106,10 +110,10 @@ export function PreviewResume() {
 
         {skills.length > 0 && (
           <section>
-            <h2 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-black mb-2">
+            <h2 className={`${styles.sectionHeaderSize} ${styles.sectionHeaderWeight} uppercase ${styles.sectionHeaderTracking} text-black mb-2`}>
               Skills
             </h2>
-            <p className="text-sm text-black/90">{skills.join(" · ")}</p>
+            <p className={`${styles.bodyFontSize} text-black/90`}>{skills.join(" · ")}</p>
           </section>
         )}
 
