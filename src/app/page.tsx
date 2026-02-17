@@ -11,7 +11,7 @@ export default function Home() {
       </p>
       <div className="mt-10">
         <Link
-          href="/builder"
+          href="/rb/01-problem"
           className="inline-flex items-center justify-center rounded-lg bg-[#8b0000] px-6 py-3 text-sm font-medium text-[#f7f6f3] hover:bg-[#8b0000]/90 transition"
         >
           Start Building
